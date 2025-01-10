@@ -11,6 +11,11 @@ use peixoto_os_kernel::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
+    peixoto_os_kernel::init();
+
+    // invoke a breakpoint exception
+    x86_64::instructions::interrupts::int3(); // new
+
     #[cfg(test)]
     test_main();
 
