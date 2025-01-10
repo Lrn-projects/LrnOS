@@ -9,10 +9,20 @@ use core::panic::PanicInfo;
 mod serial;
 mod vga_buffer;
 
-/// This function is called on panic.
+// This function is called on panic.
+#[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
+    loop {}
+}
+
+#[cfg(test)]
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    serial_println!("[failed]\n");
+    serial_println!("Error: {}\n", info);
+    exit_qemu(QemuExitCode::Failed);
     loop {}
 }
 
@@ -34,18 +44,17 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 
 #[cfg(test)]
 fn test_runner(tests: &[&dyn Fn()]) {
-    println!("{}Running {} tests", "\n", tests.len());
+    serial_println!("{}Running {} tests", "\n", tests.len());
     for test in tests {
         test();
     }
-    exit_qemu(QemuExitCode::Success);
 }
 
 #[test_case]
 fn trivial_assertion() {
-    print!("trivial assertion... ");
+    serial_println!("trivial assertion... ");
     assert_eq!(1, 1);
-    println!("[ok]");
+    serial_print!("[ok]");
 }
 
 static HELLO: &str = "Hello from the PeixotOS kernel!";
