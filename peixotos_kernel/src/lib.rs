@@ -57,11 +57,6 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     loop {}
 }
 
-pub fn init() {
-    gdt::init();
-    interrupts::init_idt();
-}
-
 /// Entry point for `cargo test`
 #[cfg(test)]
 #[no_mangle]
@@ -75,4 +70,11 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     test_panic_handler(info)
+}
+
+pub fn init() {
+    gdt::init();
+    interrupts::init_idt();
+    unsafe { interrupts::PICS.lock().initialize() };
+    x86_64::instructions::interrupts::enable();
 }

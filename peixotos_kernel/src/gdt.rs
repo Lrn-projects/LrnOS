@@ -1,6 +1,7 @@
 /*
-File for the Global Descriptor Table handler.
-
+This file implements the Global Descriptor Table (GDT) and the Task State Segment (TSS) for the kernel.
+    •The GDT defines memory segments and includes an entry for the TSS.
+    •The TSS provides an Interrupt Stack Table (IST), enabling the kernel to switch to a safe stack in case of critical faults, such as a double fault.
 */
 
 use core::convert::TryInto;
@@ -20,6 +21,7 @@ lazy_static! {
             const STACK_SIZE: usize = 4096 * 5;
             static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
 
+            #[allow(static_mut_refs)]
             let stack_start = VirtAddr::from_ptr(unsafe { &STACK });
             let stack_end = stack_start + STACK_SIZE.try_into().unwrap();
             stack_end

@@ -6,6 +6,7 @@
 
 use core::panic::PanicInfo;
 use peixoto_os_kernel::serial_print;
+use peixoto_os_kernel::test_runner;
 use peixoto_os_kernel::{exit_qemu, serial_println, QemuExitCode};
 
 #[no_mangle]
