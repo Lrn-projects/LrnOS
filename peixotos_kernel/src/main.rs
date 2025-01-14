@@ -12,11 +12,7 @@ pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
     peixoto_os_kernel::init();
-
-    #[cfg(test)]
-    test_main();
-
-    loop {}
+    peixoto_os_kernel::hlt_loop();
 }
 
 /// This function is called on panic.
@@ -30,5 +26,6 @@ fn panic(info: &PanicInfo) -> ! {
 #[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    peixoto_os_kernel::test_panic_handler(info)
+    println!("{}", info);
+    peixoto_os_kernel::hlt_loop();
 }
