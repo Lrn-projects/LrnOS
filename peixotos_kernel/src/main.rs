@@ -10,8 +10,11 @@ use peixoto_os_kernel::println;
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
-
     peixoto_os_kernel::init();
+
+    #[cfg(test)]
+    test_main();
+
     peixoto_os_kernel::hlt_loop();
 }
 
