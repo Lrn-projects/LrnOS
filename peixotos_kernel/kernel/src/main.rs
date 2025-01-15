@@ -1,21 +1,21 @@
 #![no_std]
 #![no_main]
 #![feature(custom_test_frameworks)]
-#![test_runner(peixoto_os_kernel::test_runner)]
+#![test_runner(kernel::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
-use peixoto_os_kernel::println;
+use kernel::println;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
-    peixoto_os_kernel::init();
+    kernel::init();
 
     #[cfg(test)]
     test_main();
 
-    peixoto_os_kernel::hlt_loop();
+    kernel::hlt_loop();
 }
 
 /// This function is called on panic.
@@ -30,5 +30,5 @@ fn panic(info: &PanicInfo) -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    peixoto_os_kernel::hlt_loop();
+    kernel::hlt_loop();
 }

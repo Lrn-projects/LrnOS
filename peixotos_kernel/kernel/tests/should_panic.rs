@@ -5,9 +5,9 @@
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
-use peixoto_os_kernel::serial_print;
-use peixoto_os_kernel::test_runner;
-use peixoto_os_kernel::{exit_qemu, serial_println, QemuExitCode};
+use kernel::serial_print;
+use kernel::test_runner;
+use kernel::{exit_qemu, serial_println, QemuExitCode};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {

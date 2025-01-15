@@ -7,7 +7,7 @@ Test file to cause a stack overflow and test the handler for it.
 
 use core::panic::PanicInfo;
 
-use peixoto_os_kernel::serial_print;
+use kernel::serial_print;
 
 use lazy_static::lazy_static;
 use x86_64::structures::idt::InterruptDescriptorTable;
@@ -18,14 +18,14 @@ lazy_static! {
         unsafe {
             idt.double_fault
                 .set_handler_fn(test_double_fault_handler)
-                .set_stack_index(peixoto_os_kernel::gdt::DOUBLE_FAULT_IST_INDEX);
+                .set_stack_index(kernel::gdt::DOUBLE_FAULT_IST_INDEX);
         }
 
         idt
     };
 }
 
-use peixoto_os_kernel::{exit_qemu, serial_println, QemuExitCode};
+use kernel::{exit_qemu, serial_println, QemuExitCode};
 use x86_64::structures::idt::InterruptStackFrame;
 
 extern "x86-interrupt" fn test_double_fault_handler(
@@ -45,7 +45,7 @@ pub fn init_test_idt() {
 pub extern "C" fn _start() -> ! {
     serial_print!("stack_overflow::stack_overflow...\t");
 
-    peixoto_os_kernel::gdt::init();
+    kernel::gdt::init();
     init_test_idt();
 
     // trigger a stack overflow
@@ -62,5 +62,5 @@ fn stack_overflow() {
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    peixoto_os_kernel::test_panic_handler(info)
+    kernel::test_panic_handler(info)
 }
