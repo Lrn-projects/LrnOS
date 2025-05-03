@@ -6,24 +6,18 @@
 
 use core::panic::PanicInfo;
 use kernel::println;
+use bootloader::{BootInfo, entry_point};
 
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
-    println!("Hello World{}", "!");
+entry_point!(kernel_main);
+
+fn kernel_main(boot_info: &'static BootInfo) -> ! {
     kernel::init();
 
     #[cfg(test)]
     test_main();
 
+    println!("Lrn Kernel started successfully");
     kernel::hlt_loop();
-}
-
-/// This function is called on panic.
-#[cfg(not(test))]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
-    loop {}
 }
 
 #[cfg(test)]
