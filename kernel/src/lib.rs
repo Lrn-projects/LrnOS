@@ -78,6 +78,7 @@ fn panic(info: &PanicInfo) -> ! {
     test_panic_handler(info)
 }
 
+/// infinite loop on x86 hlt instructions, put the cpu in sleep until the next hardware interrupt
 pub fn hlt_loop() -> ! {
     loop {
         x86_64::instructions::hlt();
